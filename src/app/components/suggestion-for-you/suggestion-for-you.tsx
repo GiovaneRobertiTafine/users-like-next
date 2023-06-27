@@ -8,8 +8,6 @@ export default function SuggestionForYou({ setDataUser, setFollowUser }: Suggest
 
     useEffect(() => {
         const sugestoesRef = localStorage.getItem("suggestion-user")?.split(';');
-        console.log(sugestoesRef);
-        console.log(suggestionsSubject$.value);
         if (sugestoesRef && suggestionsSubject$?.value === null) {
             // console.log([...sugestoesRef.map((v) => JSON.parse(v))]);
             suggestionsSubject$.next([...sugestoesRef.map((v) => JSON.parse(v))]);
@@ -25,7 +23,7 @@ export default function SuggestionForYou({ setDataUser, setFollowUser }: Suggest
         });
 
         followersSubject$.asObservable().subscribe((f) => {
-            const i = suggestionsSubject$.getValue().findIndex((v) => v.login.uuid === f[f.length - 1].login.uuid);
+            const i = suggestionsSubject$.getValue().findIndex((v) => v?.login.uuid === f[f?.length - 1].login.uuid);
             if (i >= 0) suggestionsSubject$.value.splice(i, 1);
             localStorage.getItem("suggestion-user")?.split(';').forEach((v: any, index) => {
                 if (JSON.parse(v).login.uuid !== f[f.length - 1].login.uuid) {
