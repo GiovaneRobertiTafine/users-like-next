@@ -45,7 +45,6 @@ export default function BoxFollowers({ unfollowUser, viewThumb }: BoxFollowersCo
 
     return (
         <>
-            <span>{viewFollowers.toString()}</span>
             <span>
                 {
                     followers?.length ?

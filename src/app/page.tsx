@@ -3,7 +3,7 @@ import Image from 'next/image';
 import styles from './page.module.scss';
 import './globals.scss';
 import NavBar from './components/nav-bar/nav-bar';
-import { addFollower, addSuggestion, delFollower, getUserRandom } from './services/user.service';
+import { addFollower, addSuggestion, delFollower, followersSubject$, getUserRandom, suggestionsSubject$ } from './services/user.service';
 import { useEffect, useState } from 'react';
 import ThumbUser from './components/thumb-user/thumb-user';
 import PersonalInfo from './components/personal-info/personal-info';
@@ -23,7 +23,7 @@ export default function Home() {
         console.log(data);
         try {
             const result = await getUserRandom();
-            setData(result.results[0]);
+            verifyRepeteadUser(result.results[0]);
         } catch (error) { }
     };
 
@@ -44,6 +44,17 @@ export default function Home() {
     const handlerUnfollowUser = (id: string) => {
         delFollower(id);
         if (id === data.login.uuid) getUser();
+    };
+
+    const verifyRepeteadUser = (user: any): void => {
+        if (
+            suggestionsSubject$.getValue().findIndex((v) => v.login.uuid === user.login.uuid) !== -1 ||
+            followersSubject$.getValue().findIndex((v) => v.login.uuid === user.login.uuid) !== -1
+        ) {
+            getUser();
+        } else {
+            setData(user);
+        }
     };
 
     return (
